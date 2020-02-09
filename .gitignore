@@ -1,3 +1,6 @@
 _site
 .sass-cache
 .jekyll-metadata
+_posts/ideas.file
+_posts/jekyll-starting.markdown
+_posts/template.markdown
