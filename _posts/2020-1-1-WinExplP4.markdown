@@ -106,7 +106,7 @@ Not too sure what to cover next, either going to continue this style and cover R
 
 <br>
 Windows Exploitation:
-[I](/windows-exploitation/2020/1/1/WinExplP1.html)	[II](/windows-exploitation/2020/1/1/WinExplP2.html)	[III](/windows-exploitation/2020/1/1/WinExplP3.html)	[IV](/windows-exploitation/2020/1/1/WinExplP4.html)	[V](/windows-exploitation/2020/1/1/WinExplP5.html)
+[I](/windows-exploitation/2020/01/01/WinExplP1.html)	[II](/windows-exploitation/2020/01/01/WinExplP2.html)	[III](/windows-exploitation/2020/01/01/WinExplP3.html)	[IV](/windows-exploitation/2020/01/01/WinExplP4.html)	[V](/windows-exploitation/2020/01/01/WinExplP5.html)
 
 
 
