@@ -141,4 +141,4 @@ The next part will focus on dealing with the windows Structured Exception Handle
 
 <br>
 Windows Exploitation:
-[I](/windows-exploitation/2020/1/1/WinExplP1.html)	[II](/windows-exploitation/2020/1/1/WinExplP2.html)	[III](/windows-exploitation/2020/1/1/WinExplP3.html)	[IV](/windows-exploitation/2020/1/1/WinExplP4.html)	[V](/windows-exploitation/2020/1/1/WinExplP5.html)
+[I](/windows-exploitation/2020/01/01/WinExplP1.html)	[II](/windows-exploitation/2020/01/01/WinExplP2.html)	[III](/windows-exploitation/2020/01/01/WinExplP3.html)	[IV](/windows-exploitation/2020/01/01/WinExplP4.html)	[V](/windows-exploitation/2020/01/01/WinExplP5.html)
