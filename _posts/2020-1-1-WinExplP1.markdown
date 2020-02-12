@@ -87,7 +87,7 @@ For now im going to put off writing about how to get started with C and Assembly
 The next part will be looking at writing a stock standard windows stack based buffer overflow.
 <br />
 Windows Exploitation:
-[I](/windows-exploitation/2020/1/1/WinExplP1.html)	[II](/windows-exploitation/2020/1/1/WinExplP2.html)	[III](/windows-exploitation/2020/1/1/WinExplP3.html)	[IV](/windows-exploitation/2020/1/1/WinExplP4.html)	[V](/windows-exploitation/2020/1/1/WinExplP5.html)
+[I](/0xfml.github.io/windows-exploitation/2020/1/1/WinExplP1.html)	[II](/0xfml.github.io/windows-exploitation/2020/1/1/WinExplP2.html)	[III](/0xfml.github.io/windows-exploitation/2020/1/1/WinExplP3.html)	[IV](/0xfml.github.io/windows-exploitation/2020/1/1/WinExplP4.html)	[V](/0xfml.github.io/windows-exploitation/2020/1/1/WinExplP5.html)
 
 
 
