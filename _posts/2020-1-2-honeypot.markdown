@@ -87,17 +87,11 @@ Well in a normal scenario with open or accessable ssh, a normal user would in fa
 
 # Geolocation
 ```
-Top 10 countries by interactions
-1. Ireland - xyz
-2. Germany - xyz
-3. Russia - xyz
-4. x
-5.
-6.
-7.
-8.
-9.
-10.
+Top 3 countries by interactions
+1. Ireland 
+2. Germany 
+3. Russia 
+
 ``` 
 
 wtf ireland? not china/russia?
@@ -106,22 +100,23 @@ I asked myself this exact question when splunk spat these numbers out, i didnt t
 
 # General Stats
 ```
-Malicious file download attempts =	 x 
-Unique source ips =			 y
-Unique destination ips =		 z 
-Attempts at /etc/passwd =		 x
-Attempts at /.ssh/authorized_keys =	 y
-Unique usernames =			 z
-Unique passwords =			 x
-Total events* =				 y
+Malicious file download attempts =	 ~4500 
+Unique source ips =			 ~9k
+Unique destination ips =		 ~4k
+Top interactions from single ip = 	 >2m
+Attempts at /etc/passwd =		 >1500
+Attempts at /.ssh/authorized_keys =	 >1200
+Unique usernames =			 ~6k
+Unique passwords =			 ~45k
+Total events* =				 ~20m
 
-x/6 months = z
+20m/6 months = 110k per day
 
 * not counting scans. Attempt or input only.
 ```
 
 # Returns
-- xk wordlist created from logins and attempts
+- 45k wordlist created from logins and attempts
 - malware samples to disassemble and reverse
 - hours of fun
 
@@ -134,7 +129,7 @@ x/6 months = z
 - Some people havent grasped how to transfer files on unix systems.
 
 # Things to do differently
-As i mentioned i would certainly take advantage of forwarding from the honeypot to a running ingestion log service like logstash. I would also setup a visualisation panel like greylog or tango for splunk. Just for general interactions i probably would have chosen a host with better latency, i seemed to skim over that option on setup :facepalm:. 
+As i mentioned i would certainly take advantage of forwarding from the honeypot to a running ingestion log service like logstash. I would also setup a visualisation panel like greylog or tango for splunk. Just for general interactions i probably would have chosen a host with better latency, i seemed to skim over that option on setup :facepalm:. I would also develop a better warning system for breakouts, i know the python virtual env structure is amazing, but incase of some new exploit developments i would want to know who or what is on my system. At the time, the only warning system i had was emails from the vps provider letting me know theyre terminating my service due to illicit activity.
 
 # Further research
 Reflecting on this project, i got thinking about what i could do to further gather information on current botnets and malware floating around the internet. If you havent seen the defcon 20 talk 'owning bad guys and mafia with javascript botnets', i recommend sitting down and watching it. I rewatched it whilst sifting through logs one night and began to wonder if i could replicate the same thing but with ssh. What if we could activily allow connections through an ssh tunnel on a honeypot box and strip out credentials and addresses to better see what bots and adversaries are up to.
