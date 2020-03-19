@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Intro to vulnserver"
-date:   2020-1-15 00:11:00 +0000
+date:   a2020-1-15 00:11:00 +0000
 categories: Windows
 ---
 
