@@ -552,8 +552,4 @@ flag: actf{youre_a_canary_killer_>:(}
 <br>
 Overall this was a fun challenge, i hadnt encountered stack canaries in x64 binaries before so i found it good to research how to get around them with a leak and how pwntools can do the messy work.
 
-# Challenge 3 - LIBrary in c
 
-coming soon.
-
-This challenge was similar again but with another step up, along with leaking the canary, we needed to leak the base (or relevant address) of libc to create a ret2libc exploit instead of a traditional overflow.
