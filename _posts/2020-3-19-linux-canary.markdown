@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Understanding Linux stack canaries"
-date:   2019-3-19 01:11:00 +0100
+date:   2020-3-19 01:11:00 +0100
 categories: Linux
 ---
 
