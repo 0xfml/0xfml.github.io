@@ -1,10 +1,10 @@
 ---
 layout: post
-title:  "Exploit Excersises Protostar Format"
+title:  "Exploit Exersises Protostar Format"
 date:   2020-1-10 0:06:00 +0000
-categories: Exploit-Excersises
+categories: Exploit-Exersises
 ---
-In this series ill be covering the protostar excersises from exploit-excersises / exploit.education. Its a series of challenges designed to teach common linux exploits that will occur in CTF challenges.
+In this series ill be covering the protostar exersises from exploit-exersises / exploit.education. Its a series of challenges designed to teach common linux exploits that will occur in CTF challenges.
 Protostar introduces a range of things in a way that takes it from introductory to more advanced:
 - Network programming
 - Byte order
