@@ -1,10 +1,10 @@
 ---
 layout: post
-title:  "Exploit Excersises Protostar Stack"
+title:  "Exploit Exersises Protostar Stack"
 date:   2020-1-10 0:05:00 +0000
-categories: Exploit-Excersises
+categories: Exploit-Exersises
 ---
-In this series ill be covering the protostar excersises from exploit-excersises / exploit.education. Its a series of challenges designed to teach common linux exploits that will occur in CTF challenges.
+In this series ill be covering the protostar exersises from exploit-exersises / exploit.education. Its a series of challenges designed to teach common linux exploits that will occur in CTF challenges.
 Protostar introduces a range of things in a way that takes it from introductory to more advanced:
 - Network programming
 - Byte order
@@ -392,7 +392,7 @@ root
 WOOO
 <br>
 # Review
-The stack series from exploit excercises/education is actually a great way to learn how to create stack based exploits in c applications. I would say this only works if you have the patience and motivation for self learning and reading manpages and documents. 
+The stack series from exploit exercises/education is actually a great way to learn how to create stack based exploits in c applications. I would say this only works if you have the patience and motivation for self learning and reading manpages and documents. 
 <br>
 Thats it for the stack series of exercises. Weve gone from basic overflows to ret2libc and next ill move into format string vulnerabilities.
 <br>
