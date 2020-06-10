@@ -156,7 +156,7 @@ All used as `java -jar <app> > /log.file 2>&1`
 I decided to stop here. I've basically been through as much of this as I could within reasonable means. It was interesting once again to see how people set up projects like this, especially if there's some money involved. This example I followed was for sure very small compared to what I can only imagine is out there but nonetheless still interesting.
 
 If you've gotten this far, thanks for reading and I hope you enjoyed my late night ramblings.
-
+<br>
 ~fml
-
+<br>
 P.S: It might not be the best idea to use your full name as private key names if you're running a sketchy operation ;)
