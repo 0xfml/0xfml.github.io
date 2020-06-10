@@ -7,17 +7,17 @@ categories: blog
 # Investigating a small time spam operation
 
 To preface this id like to start by saying I don't condone the entering of property, digital or otherwise unlawfully or without preapproval. In this case however, I had strong reason to believe the digital property was being used with malice intent against potential targets. All of the organisations, names, usernames and identifiable information have been removed from the findings in this article. The purpose of this article is not to encourage people to attack random environments once you find credentials online, but more so to showcase how attackers can abuse online platforms to gain access to said environments if insecure practices are used. 
-
+<br>
 No information found in this research was kept, destroyed or edited from its root source by me, same applies for the environment in which said information was found.
 
 ## So how did this start? 
 
 Well one night I was hanging out with some mates in a call after playing some games, we were chatting about random antics while doing other things. A friend of mine was trawling through some of his scrapings from a well known centralised development environment, the thing that caught our eye wasn't something that would immediately stand out. It was a simple Sendgrid key, but after verifying it, we found it belonged to an organisation that didn't fit the account email associated. I'm not going to talk about scraping the internet or how to verify keys you find online, articles about those kinds of things are easily found online already. 
-
+<br>
 Anyway, we had a somewhat suspicious account linked to a well known public organisation (with paid Sendgrid account) and a link to the software repository where the code was. Immediately we dug into the codebase, it was super weird but stood out. Seeing a bunch of hard-coded email credentials in java applications reminded me of all the shitty visual basic code we've all seen before but not just that, there were entire text documents with lists of Mailgun accounts. 
-
+<br>
 I haven't really explained the core aspect we saw here. These weren't just a poor developers credentials, they were creds to Mailgun accounts that belonged to shady accounts that once ran through a search engine showed signs of email spam for miscellaneous parts for various things (plastic molded truck parts was one as an example). If that didn't make sense, have you ever added something to the cart in a lesser known online store and, without even purchasing anything, had emails sent to your account with ads for the types of things you were _going_ to buy? I guess it fits the bill for datamining and its what we saw a footprint of here. It helped in this case that along with the urls as mail FROM addresses, there was an entire string array for email subjects that would be used in template creation. Seeing this was interesting as I hadn't much thought of the ways people would get ads into emails, in this case I imagine a spam filter would reject 90% of what's in the subject array, but they had taken the extra step to add some entities with a `RE:` prefix to maybe trick recipients into thinking it was legit. It also helped that they had a separate array containing the text that would fit into the templated email. Never had I seen entire inline emails until now, some credit is due (I guess) to whoever spent time writing these, and taking time to get the perfect amount of `\t`'s for formatting. Almost all of this, id expect would get blocked by a half decent spam filter.  
-
+<br>
 So back to it, I had a code repo with a good handful of mail accounts to look into with connected domains. Running a couple of these through the login forms on the web interfaces, it looked like the dev had enabled 2fa on the accounts so it wasn't as simple as login and password to see what was inside. That was smart, and in mind, security conscious. What wasn't however, was the handful of private key files inside the repo with corresponding scripts to tell me which IPs and users the private keys matched with. <something something connection string>. One thing I was slightly worried about was the possibility of the key files being encrypted and since the text language used in many documents weren't english, I thought this could make for a dead end. In this case, I was in luck, it seemed that the dev wanted to streamline the access into these VPS boxes with one-liners so had not encrypted their keys. I took one of the keys, took note of the IP and username and booted up my VM.
 
 <br>
@@ -55,11 +55,11 @@ So lets take a step back and look down for a second.
   - `ssh -i xxx.pem user@instance 'password123'` vs `ssh -i xxx.pem user@instance $vps2psw`
 - Private repos are also free under certain providers.
   - In this case, the expected lifetime of most of this project (if not maintained) is quite low as it relies on free trials that expire based on time so it doesn't really matter. (still a bit odd that it would make it to a repo but that's beside the point.) 
-
+<br>
 So now what? I've validated access with a key for the first box in the list but what's the goal here? Well, I actually didn't know the answer at the time. I decided to take a break for the day and maybe ask for some opinions from people as to how to approach these somewhat available VPS instances. From translating the text files in the code repository, I recognized that there should be ~7 accessible boxes based on the keys that are there, but there's a record of about 10 more that have been 'retired'. From this I gather that the developer/maintainer of this project is using the free instances that providers like amazon use on their low end options. I also wanted to do more static research on the program files, IP range and emails that I had access to just to solidify that I wasn't intruding on a dev environment that just appeared sketchy. As I mentioned previously, I don't condone plowing through someones environment just because you have the creds to do so. I would recommend contacting the owner / organisation to let them know of the security implications of these lying around in code bases, never know, they could be kind enough to grand a bounty but regardless, its probably the ethical thing to do.
-
+<br>
 Its now a couple of days later and I've still yet to really do anything other than validate private keys and attempt some emails. I chose to take another look through the limited code base to see if I had missed anything, which I had. From the repository, I can somewhat workout what the setup of the operation is. The person/organisation is using Alibaba EC instances to send mail using both Mailgun and Sendgrid accounts to send emails to a list (they were kind enough to also include some of the SQL queries in the codebase). One thing I missed in the repo was amazon SES account links, with plaintext credentials, of course. 
-
+<br>
 So at this point, I had the following:
 
 - A handful of Mailgun accounts
@@ -149,6 +149,7 @@ A developer of a spam operation decided to put his code online. Lead to some int
 - email a batch 
 
 All used as `java -jar <app> > /log.file 2>&1`
+<br>
 
 **fin**
 
