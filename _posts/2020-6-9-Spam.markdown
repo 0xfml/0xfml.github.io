@@ -1,10 +1,9 @@
 ---
 layout: post
-title: "Investigating a spam operation"
-date: "2020-6-9" 00:01:00 +0000
+title:  "Investigating a spam operation"
+date:   2020-6-9 00:01:00 +0000
 categories: blog
 ---
-
 # Investigating a small time spam operation
 
 To preface this id like to start by saying I don't condone the entering of property, digital or otherwise unlawfully or without preapproval. In this case however, I had strong reason to believe the digital property was being used with malice intent against potential targets. All of the organisations, names, usernames and identifiable information have been removed from the findings in this article. The purpose of this article is not to encourage people to attack random environments once you find credentials online, but more so to showcase how attackers can abuse online platforms to gain access to said environments if insecure practices are used. 
