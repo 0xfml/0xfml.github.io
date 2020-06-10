@@ -1,0 +1,162 @@
+---
+layout: post
+title: "Investigating a spam operation"
+date: "2020-6-6" 00:01:00 +0000
+categories: blog
+---
+
+# Investigating a small time spam operation
+
+To preface this id like to start by saying I don't condone the entering of property, digital or otherwise unlawfully or without preapproval. In this case however, I had strong reason to believe the digital property was being used with malice intent against potential targets. All of the organisations, names, usernames and identifiable information have been removed from the findings in this article. The purpose of this article is not to encourage people to attack random environments once you find credentials online, but more so to showcase how attackers can abuse online platforms to gain access to said environments if insecure practices are used. 
+
+No information found in this research was kept, destroyed or edited from its root source by me, same applies for the environment in which said information was found.
+
+## So how did this start? 
+
+Well one night I was hanging out with some mates in a call after playing some games, we were chatting about random antics while doing other things. A friend of mine was trawling through some of his scrapings from a well known centralised development environment, the thing that caught our eye wasn't something that would immediately stand out. It was a simple Sendgrid key, but after verifying it, we found it belonged to an organisation that didn't fit the account email associated. I'm not going to talk about scraping the internet or how to verify keys you find online, articles about those kinds of things are easily found online already. 
+
+Anyway, we had a somewhat suspicious account linked to a well known public organisation (with paid Sendgrid account) and a link to the software repository where the code was. Immediately we dug into the codebase, it was super weird but stood out. Seeing a bunch of hard-coded email credentials in java applications reminded me of all the shitty visual basic code we've all seen before but not just that, there were entire text documents with lists of Mailgun accounts. 
+
+I haven't really explained the core aspect we saw here. These weren't just a poor developers credentials, they were creds to Mailgun accounts that belonged to shady accounts that once ran through a search engine showed signs of email spam for miscellaneous parts for various things (plastic molded truck parts was one as an example). If that didn't make sense, have you ever added something to the cart in a lesser known online store and, without even purchasing anything, had emails sent to your account with ads for the types of things you were _going_ to buy? I guess it fits the bill for datamining and its what we saw a footprint of here. It helped in this case that along with the urls as mail FROM addresses, there was an entire string array for email subjects that would be used in template creation. Seeing this was interesting as I hadn't much thought of the ways people would get ads into emails, in this case I imagine a spam filter would reject 90% of what's in the subject array, but they had taken the extra step to add some entities with a `RE:` prefix to maybe trick recipients into thinking it was legit. It also helped that they had a separate array containing the text that would fit into the templated email. Never had I seen entire inline emails until now, some credit is due (I guess) to whoever spent time writing these, and taking time to get the perfect amount of `\t`'s for formatting. Almost all of this, id expect would get blocked by a half decent spam filter.  
+
+So back to it, I had a code repo with a good handful of mail accounts to look into with connected domains. Running a couple of these through the login forms on the web interfaces, it looked like the dev had enabled 2fa on the accounts so it wasn't as simple as login and password to see what was inside. That was smart, and in mind, security conscious. What wasn't however, was the handful of private key files inside the repo with corresponding scripts to tell me which IPs and users the private keys matched with. <something something connection string>. One thing I was slightly worried about was the possibility of the key files being encrypted and since the text language used in many documents weren't english, I thought this could make for a dead end. In this case, I was in luck, it seemed that the dev wanted to streamline the access into these VPS boxes with one-liners so had not encrypted their keys. I took one of the keys, took note of the IP and username and booted up my VM.
+
+<br>
+
+```
+fml@thirdeye:~$ chmod 600 ██████.pem
+fml@thirdeye:~$ ssh -i ██████.pem ███-████@██.███.███.██
+Last login: Thu May 28 09:14:11 2020 from xx.xx.xx.xx
+SUSE Linux Enterprise Server 12 SP4 x86_64 (64-bit)
+
+As "root" (sudo or sudo -i) use the:
+ - zypper command for package management
+ - yast command for configuration management
+ 
+ Management and Config: https://www.suse.com/suse-in-the-cloud-basics
+ Documentation: https://www.suse.com/documentation/sles-12/
+ Forum: https://forums.suse.com/forumdisplay.php?93-SUSE-Public-Cloud
+
+Have a lot of fun...
+███████@████████:~>
+
+// heck yeah!
+```
+
+<br>
+
+So lets take a step back and look down for a second.
+
+- Credentials and private keys in public code repos probably isn't a good idea
+  - private key encryption is a thing.
+- Hard coded plaintext credentials in applications with easily readable code is not a good idea
+- 2 factor authentication will stop people initially logging into your account
+- IP whitelisting is a good thing and should be used for VPS solutions if possible
+- Don't leave bash one-liners with SSH (or similar services) with plaintext credentials inside, consider using environment variables if you must script it.
+  - `ssh -i xxx.pem user@instance 'password123'` vs `ssh -i xxx.pem user@instance $vps2psw`
+- Private repos are also free under certain providers.
+  - In this case, the expected lifetime of most of this project (if not maintained) is quite low as it relies on free trials that expire based on time so it doesn't really matter. (still a bit odd that it would make it to a repo but that's beside the point.) 
+
+So now what? I've validated access with a key for the first box in the list but what's the goal here? Well, I actually didn't know the answer at the time. I decided to take a break for the day and maybe ask for some opinions from people as to how to approach these somewhat available VPS instances. From translating the text files in the code repository, I recognized that there should be ~7 accessible boxes based on the keys that are there, but there's a record of about 10 more that have been 'retired'. From this I gather that the developer/maintainer of this project is using the free instances that providers like amazon use on their low end options. I also wanted to do more static research on the program files, IP range and emails that I had access to just to solidify that I wasn't intruding on a dev environment that just appeared sketchy. As I mentioned previously, I don't condone plowing through someones environment just because you have the creds to do so. I would recommend contacting the owner / organisation to let them know of the security implications of these lying around in code bases, never know, they could be kind enough to grand a bounty but regardless, its probably the ethical thing to do.
+
+Its now a couple of days later and I've still yet to really do anything other than validate private keys and attempt some emails. I chose to take another look through the limited code base to see if I had missed anything, which I had. From the repository, I can somewhat workout what the setup of the operation is. The person/organisation is using Alibaba EC instances to send mail using both Mailgun and Sendgrid accounts to send emails to a list (they were kind enough to also include some of the SQL queries in the codebase). One thing I missed in the repo was amazon SES account links, with plaintext credentials, of course. 
+
+So at this point, I had the following:
+
+- A handful of Mailgun accounts
+- 1 or 2 Sendgrid accounts
+- 1 Amazon SES account
+- ~7 EC IPs with associated private keys
+- lots of java to decipher, fun 
+
+I also chose to spend more time reading the code as it was and not thinking about what could potentially lie on the boxes. The operation, although small, was quite thought out. Different segmented mail providers, accounts, error handing and reporting to (what I assume are) catchalls and what appeared to be code to implement attachments too.
+
+## The juice
+
+So after much consideration, I took the dive. I wanted to know if this operation was still alive and decided to take the key I verified earlier to see what was on the box. It turned out to be more or less than I expected; the java apps I had seen before, a site running locally (which had also been referenced in the code) and a couple of .sql files. Opening one of the sql files, which was named appropriately to indicate contents, revealed what I expected. There were a few empty tables which by name sounded promising, but the ones with content had some interesting stuff too. The first one I checked linked back to my initial finding -  `email_APIKEY_all`. Viewing the columns, I stripped out the `APIKEY` and `POST_URL` (because it sounded interesting at the time). What I then got was more Sendgrid keys which I needed to verify, as well as what looked like more VPS IP addresses. I took the Sendgrid keys and attempted to verify them via the API again, this time they returned as valid but I wasn't able to get any more details as the permissions were different. I'll come back for the VPS addresses at a later stage. Other than that, there was basically just the basic unix-y setup along with a bunch of rpm packages which would have been transferred for install.
+
+Next was the table with the most content, the `EMAIL_ADDR` table. With roughly 95k entries, it was filled with what I can only assume is recipients to the mail spam. Something that crossed my mind after seeing the name of the file and these entries was that the person running the operation had likely purchased a private or downloaded a public breach database which they then stripped emails out to add to their campaign. I of course cant validate this completely but I thought I'd try a few through haveibeenpwned to attempt to chain a connection to a breach. After testing a handful of these (really couldn't be bothered with all and some were invalid), it was actually hard to match all of them with a dump - this lead me to believe it came from a data mining collection. Invalid emails in this case indicated there wasn't email verification and people used fakes to create the account. `______@___.__` was an account entry in the local database. It would match regex for basic account creation but not for an actual mail provider. I actually went back through the java application to try find the regex they were using. `"[\\w\\.\\-]+@([\\w\\-]+\\.)+[\\w\\-]+"` was the pattern being used, and generally we can see that it wants <word>@<word>.<word> so the above sample did fit and hinted again that this may not be a database from a breach.
+
+### box 2
+
+When I first landed in box2, it felt empty. There wasn't the clutter of rpm files and even some of the folders I was expecting to find weren't here. It felt as if this box was mid setup or something. I looked around to see if I could find similarities to box1 but there was no big juicy database like last time :/ . This time there was only the tar files (from which I expect are being used to auto deploy the app) and an application folder with said deployed app inside. There wasn't a web directory this time and no copied source. The one interesting thing I managed to find was a log file. Turns out the entire app logs itself every time it sends out mail :facepalm: . So I take a look at the log file and what do I see... a 500+k line log of every email sent in the last batch. The structure from what I can understand is;
+
+```
+MAIL_SERVICE_USED : <something> : ADDRESS_TO : <something>
+<log words> ADDRESS_TO : API_KEY
+content: <entire one line html message>
+API_KEY (again)
+<json object> [to, name, subject, from] << all things seen in source. 
+```
+
+The last thing I checked before checking out, was the bash_history. I tried to made a habit of this just to see what kinds of things were going on. This time, it was only about 25 lines and seemingly, the app had only been used once. This helped show me how the app is deployed and how all it takes is a one-liner to send a load of people annoying mail. It also showed me that this box (seemingly) was only used once.
+
+### box 3 
+
+Box3 was very much like box2, way less clutter than box1 but it seemed to be used a bit more. There was a collection of private keys (that had dupes in the code base) and logs in the bash history to show that they used this box to jump into others. It also showed that the user is using telnet to communicate to a/the webserver/s that are being run. At this point, I didn't have an exact idea of what these webservers would even to but it was on my list to look into. This box also had a log file like the last, this time it was half the size at ~240k lines, same content though.
+
+### box 4 + box 5
+
+Box4 and box5 were basically identical, and almost the same as box3 so nothing really new.
+
+### box 6
+
+I was sort of excited when I saw this IP again in the list, I now recognized it as the box running a webserver that remained accessible. This time I wanted to see what was on it and whether I could deconstruct what it was doing with requests. I was amazed when I ran a `ps aux | grep 8081` on the box and it returned nothing. It made me think that the webserver was being served from the java app (since it was the only non default process), so I would have to take another look and try work it out from there. There was only the usual on this box, it was starting to become a pattern and bit of a decline after seeing what was presented on box1.
+
+### box 7
+
+Same as 4/5 :/
+
+### 'retired'
+
+I did also go back and check some of the 'retired' boxes listed in the repo. Unfortunately, they are all dead ends, most likely the result of free trials expiring (and subsequent new accounts separate users starting)
+
+<br>
+
+```
+fml@thirdeye:/tmp$ nmap -iL templist.txt -p22 -Pn
+Starting Nmap 7.70 ( https://nmap.org ) at 2020-06-06 AEST
+Nmap done: 8 IP addresses (0 hosts up) scanned in 5.06 seconds
+
+...snip...
+ssh: connect to host ██.███.██.█ port ██: Connection refused.
+...snip...
+
+fml@thirdeye:/tmp$ torify ssh -i <redacted> <removed>@<removed>
+ssh: connect to host <removed> port 22: Connection refused
+```
+
+<br>
+
+### Webserver breakdown
+
+As I mentioned previously, I wanted to see what this webserver the app was running was actually doing. I went back through my terminal logs and actually saw something I missed at the time. From box5, there was an entry in the bash history that simply curled a web path of one of the boxes. Upon doing the same locally, I got some json back which looked like a standard 200 OK but actually failed to actuate the request. Then I remembered the database entry with the API keys I found in box1. The 2nd column I pulled had a url attached to the keys.
+
+From what I saw in some process lists, it seems the structure of the app is not to run as a 'one shot' but instead as a continuous, daemon like program. Many of the processes were started months before I got there but remained running and spitting out logs. This made me think that the web application is acting as a trigger for the user to set off the mail delivery. [Ill add more data here if i decide to / can successfully deconstruct the api the webapp is using.]
+
+## tl;dr
+
+A developer of a spam operation decided to put his code online. Lead to some interesting late nights. 
+
+95+k emails in the database - most likely from datamining.
+
+4 main parts making up the application environment, all in java.
+
+- web app
+- email validator? 
+- email via provider1
+- email via provider2
+- email single target
+- email a batch 
+
+All used as `java -jar <app> > /log.file 2>&1`
+
+**fin**
+
+I decided to stop here. I've basically been through as much of this as I could within reasonable means. It was interesting once again to see how people set up projects like this, especially if there's some money involved. This example I followed was for sure very small compared to what I can only imagine is out there but nonetheless still interesting.
+
+If you've gotten this far, thanks for reading and I hope you enjoyed my late night ramblings.
+
+~fml
+
+P.S: It might not be the best idea to use your full name as private key names if you're running a sketchy operation ;)
