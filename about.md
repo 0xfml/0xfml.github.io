@@ -26,6 +26,8 @@ Cons past:
 [//]: <> (cysca 18, iot festival 18, cyber 9/12 19, Tracelabs missing persons ctf 19,)
 
 Cons future:
-- Bsides Melbourne 2020
-- Bsides Canberra 2020
-- Tuskcon 2020
+- ~Bsides Melbourne 2020~
+- ~Bsides Canberra 2020~
+- ~Tuskcon 2020~ 
+  
+'s/2020/???/g', Thanks COVID
