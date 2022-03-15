@@ -15,7 +15,7 @@
 # in the templates via {{ site.myvariable }}.
 title: fml~
 description: "/shrug." 
-baseurl: "/0xfml.github.io" # the subpath of your site, e.g. /blog
+baseurl: "/" # the subpath of your site, e.g. /blog
 url: "0xfml.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 
 
